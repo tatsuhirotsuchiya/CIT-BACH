@@ -1,16 +1,21 @@
 package v1;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
+
+import com.ibm.icu.text.CharsetDetector;
+import com.ibm.icu.text.CharsetMatch;
 
 public class Inputer {
 
@@ -185,7 +190,9 @@ public class Inputer {
 
 	public static InputFileData readModel(String filename) {
 
-		BufferedReader reader = openFile(filename);
+		// Detect and record the encoding of the model file so that the
+		// output can later be produced in the same encoding.
+		BufferedReader reader = openFile(filename, true);
 		List<String> tokenList = makeTokenList(reader);
 		TokenHandler t = new TokenHandler(tokenList);
 
@@ -299,19 +306,47 @@ public class Inputer {
 	}
 
 	private static BufferedReader openFile(String filename) {
-		BufferedReader reader = null;
+		return openFile(filename, false);
+	}
+
+	// Open a file for reading using the character encoding detected with
+	// ICU4J. When recordCharset is true the detected encoding is stored in
+	// Main.charset so that the output is produced in the same encoding.
+	private static BufferedReader openFile(String filename, boolean recordCharset) {
 		if (filename == null) {
 			// default: standard input
 			return new BufferedReader(new InputStreamReader(System.in));
 		}
 
 		try {
-			reader = new BufferedReader(new FileReader(filename));
-		} catch (FileNotFoundException e) {
+			byte[] bytes = Files.readAllBytes(Paths.get(filename));
+			String charset = detectCharset(bytes);
+			if (recordCharset) {
+				Main.charset = charset;
+			}
+			return new BufferedReader(new InputStreamReader(
+					new ByteArrayInputStream(bytes), charset));
+		} catch (NoSuchFileException e) {
 			Error.printError(Main.language == Main.Language.JP ? "ファイル"
 					+ filename + "が見つかりません．" : "Cannot find file " + filename);
+		} catch (IOException e) {
+			Error.printError(Main.language == Main.Language.JP ? "ファイル"
+					+ filename + "が読み込めません．" : "Cannot read file " + filename);
 		}
-		return reader;
+		return null;
+	}
+
+	// Detect the character encoding of the given bytes using ICU4J. Falls
+	// back to the platform default encoding when detection is not possible
+	// (e.g. for an empty file).
+	private static String detectCharset(byte[] bytes) {
+		CharsetDetector detector = new CharsetDetector();
+		detector.setText(bytes);
+		CharsetMatch match = detector.detect();
+		if (match != null) {
+			return match.getName();
+		}
+		return Charset.defaultCharset().name();
 	}
 
 	private static List<String> makeTokenList(BufferedReader reader) {

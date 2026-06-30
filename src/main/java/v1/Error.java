@@ -1,7 +1,7 @@
 package v1;
 
 import java.io.BufferedWriter;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
@@ -18,9 +18,11 @@ public class Error {
 		BufferedWriter writer;
 		try {
 			if (filename == null) {
-				writer = new BufferedWriter(new OutputStreamWriter(System.out));
+				writer = new BufferedWriter(new OutputStreamWriter(System.out,
+						Main.charset));
 			} else
-				writer = new BufferedWriter(new FileWriter(filename));
+				writer = new BufferedWriter(new OutputStreamWriter(
+						new FileOutputStream(filename), Main.charset));
 			writer.write("#ERROR," + str + "\n");
 			writer.close();
 		} catch (IOException e) {

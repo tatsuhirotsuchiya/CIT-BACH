@@ -1,5 +1,6 @@
 package v1;
 
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -10,6 +11,11 @@ public class Main {
 	static String seedFile;
 	static String outputFile;
 	static int strength = 2; // default strength
+
+	// Character encoding of the input (model) file, detected with ICU4J.
+	// The output is produced in this same encoding. It defaults to the
+	// platform default until the model file has been read.
+	static String charset = Charset.defaultCharset().name();
 
 	static final int MAX_LEVEL = 63;
 

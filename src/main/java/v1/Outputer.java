@@ -1,9 +1,10 @@
 package v1;
 
 import java.io.BufferedWriter;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public class Outputer {
@@ -16,13 +17,21 @@ public class Outputer {
 
 	private BufferedWriter openFile(String filename) {
 		BufferedWriter writer = null;
+		// Produce the output in the same encoding as the input file
+		// (detected with ICU4J and stored in Main.charset).
 		if (filename == null) {
 			// default: standard output
-			return new BufferedWriter(new OutputStreamWriter(System.out));
+			try {
+				return new BufferedWriter(new OutputStreamWriter(System.out,
+						Main.charset));
+			} catch (UnsupportedEncodingException e) {
+				return new BufferedWriter(new OutputStreamWriter(System.out));
+			}
 		}
 
 		try {
-			writer = new BufferedWriter(new FileWriter(filename));
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(filename), Main.charset));
 		} catch (IOException e) {
 			// System.err.print(filename + " cannot be created.");
 			// エラーを書き込めないので直接標準エラーへ
