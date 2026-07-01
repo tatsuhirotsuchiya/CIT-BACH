@@ -2,7 +2,6 @@ package v1;
 
 import java.nio.charset.Charset;
 import java.util.List;
-import java.util.TreeSet;
 
 public class Main {
 	static int randomSeed = -1;
@@ -28,7 +27,7 @@ public class Main {
 
 	enum Language {
 		JP, EN
-	};
+	}
 
 	static Language language = Language.JP;
 
@@ -162,31 +161,25 @@ public class Main {
 
 		// policyの表示
 		if (args.length == 1 && args[0].equals("-policy")) {
-			System.out
-			.println("This software (CIT-BACH 1.1) is distributed under the zlib license.\n"
-					+ "The software contains Java classes from JDD, a Java BDD library "
-					+ "developed by Arash Vahidi.\n"
-					+ "JDD is free software distributed under the zlib license.\n"
-					+ "\n"
-					+ "Copyright (c) 2015, Tatsuhiro Tsuchiya\n"
-					+ "This software is provided 'as-is', without any express or implied \n"
-					+ "warranty. In no event will the authors be held liable for any damages \n"
-					+ "arising from the use of this software. \n"
-					+ "\n"
-					+ "Permission is granted to anyone to use this software for any purpose, \n"
-					+ "including commercial applications, and to alter it and redistribute it \n"
-					+ "freely, subject to the following restrictions: \n"
-					+ " \n"
-					+ "   1. The origin of this software must not be misrepresented; you must not \n"
-					+ "   claim that you wrote the original software. If you use this software \n"
-					+ "   in a product, an acknowledgment in the product documentation would be \n"
-					+ "   appreciated but is not required. \n"
-					+ "   \n"
-					+ "   2. Altered source versions must be plainly marked as such, and must not be \n"
-					+ "   misrepresented as being the original software. \n"
-					+ "   \n"
-					+ "   3. This notice may not be removed or altered from any source \n"
-					+ "   distribution. \n");
+			System.out.println("""
+				This software (CIT-BACH 1.2) is licensed under the MIT License.
+					
+					 Copyright (c) 2026 Tatsuhiro Tsuchiya
+					
+					 This software includes components from JDD, a Java BDD library developed
+					 by Arash Vahidi. JDD is free software distributed under the zlib license.
+					 The JDD license notice is included in the distribution.
+					
+					 Permission is hereby granted, free of charge, to any person obtaining a copy
+					 of this software and associated documentation files (the “Software”), to deal
+					 in the Software without restriction, including without limitation the rights
+					 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+					 copies of the Software, and to permit persons to whom the Software is
+					 furnished to do so, subject to the conditions of the MIT License.
+					
+					 The above copyright notice and this permission notice shall be included in
+					 all copies or substantial portions of the Software.
+			""");
 			System.exit(0);
 		}
 
