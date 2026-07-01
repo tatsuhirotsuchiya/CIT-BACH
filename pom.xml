@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cit_bach</groupId>
 	<artifactId>cit_bach</artifactId>
-	<version>1.10</version>
+	<version>1.20</version>
 	<name>CIT-BACH</name>
 	<description>Combinatorial Interaction Testing tool with a BDD-Assisted Constraint Handler</description>
 	<build>
