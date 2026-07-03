@@ -1,7 +1,7 @@
 # CIT-BACH
 
 ## Software description
-CIT-BACH (pronounced as "sit back" or "sea eye tea back") is a test case generation tool for combinatorial interaction testing. CIT-BACH is written completely in Java and requires Java 17 or higher to run.
+CIT-BACH (pronounced as "sit back" or "sea eye tea back") is a test case generation tool for combinatorial interaction testing. CIT-BACH is written completely in Java and requires Java 17 or higher to run. The current development version is 1.2, which is still under development. 
 
 CIT-BACH uses a one-row-at-a-time greedy algorithm, which is similar to PICT. The tool supports constraints. To handle constraints, the tool first builds a binary decision diagram (BDD) that represents all the constraints. The way of doing this is novel in that once the BDD has been created, there is no need to manipulate it: Whether a test case or tuple satisfies the constraints or not can be checked by simply traversing the BDD from the root to the leaf, which only requires time linear in the number of parameters.
 
