@@ -34,7 +34,7 @@ public class Main {
 	// Start the whole process
 	public static void main(String[] args) {
 
-		long start = System.currentTimeMillis();
+		// long start = System.currentTimeMillis();
 
 		try {
 			// コマンド引数処理
@@ -76,7 +76,7 @@ public class Main {
 					testSet = GeneratorAll.generate(new ParameterModel(
 							inputfiledata.parameterList), conhndl);
 				} catch (OutOfMaxNumOfTestcasesException e) {
-					Error.printError(Main.language == Main.Language.JP ? "テストケース数が上限"
+					Error.printError(Main.language == Language.JP ? "テストケース数が上限"
 							+ Generator.MaxNumOfTestcases + "を超えました"
 							: "The number of test cases exceeded the upper bound "
 							+ Generator.MaxNumOfTestcases);
@@ -127,7 +127,7 @@ public class Main {
 					}
 				}
 				if (testSet == null)
-					Error.printError(Main.language == Main.Language.JP ? "テストケース数が上限"
+					Error.printError(Main.language == Language.JP ? "テストケース数が上限"
 							+ Generator.MaxNumOfTestcases + "を超えました"
 							: "The number of test cases exceeded the upper bound "
 							+ Generator.MaxNumOfTestcases);
@@ -142,10 +142,10 @@ public class Main {
 				System.err.println("test set size: " + testSet.size());
 			}
 		} catch (OutOfMemoryError e) {
-			Error.printError(Main.language == Main.Language.JP ? "メモリ不足です．"
+			Error.printError(Main.language == Language.JP ? "メモリ不足です．"
 					: "Out of memory");
 		} catch (Exception e) {
-			Error.printError(Main.language == Main.Language.JP ? "プログラムが異常終了しました．"
+			Error.printError(Main.language == Language.JP ? "プログラムが異常終了しました．"
 					: "Abnormal termination");
 		}
 
@@ -185,80 +185,90 @@ public class Main {
 
 		// エラー表示を出力ファイルが指定されるまで遅らせる
 		String errorMessage = null;
-
-		for (int i = 0; i + 1 < args.length; i += 2) {
+		int i = 0;
+		while (i < args.length && errorMessage == null) {
 			String option = args[i];
-			String str = args[i + 1];
-			if (option.equals("-i")) {
-				modelFile = str;
-			} else if (option.equals("-o")) {
-				outputFile = str;
-			} else if (option.equals("-random")) {
-				try {
-					randomSeed = Integer.parseInt(str);
-				} catch (NumberFormatException e) {
-					// Error.printError("invalid number");
-					errorMessage = Main.language == Main.Language.JP ? "ランダムシードに無効な値が指定されています．"
-							: "Invalid random seed";
-					continue;
-				}
-				randomSeed = Math.abs(randomSeed) % (Max_RandomSeed + 1);
-			} else if (option.equals("-c")) {
-				if (str.equals("all")) {
-					// 全網羅
-					strength = -1;
-				} else {
+			switch (option) {
+				// Options requiring no input values
+				case "-debug":
+					debugMode = true;
+					i = i + 1;
+					break;
+				default:
+			}
+
+			// Options requiring one input value
+			i++;
+			// no value is specified
+			if (!(i < args.length)) {
+				break;
+			}
+			String str = args[i];
+			i++;
+			switch (option) {
+				case "-i":
+					modelFile = str;
+					break;
+				case "-o":
+					outputFile = str;
+					break;
+				case "-random":
+					try {
+						randomSeed = Integer.parseInt(str);
+					} catch (NumberFormatException e) {
+						errorMessage = Main.language == Language.JP ? "ランダムシードに無効な値が指定されています．"
+								: "Invalid random seed";
+						break;
+					}
+					randomSeed = Math.abs(randomSeed) % (Max_RandomSeed + 1);
+					break;
+				case "-c":
+					// all combinations
+					if (str.equals("all")) {
+						strength = -1;
+						break;
+					}
 					try {
 						strength = Integer.parseInt(str);
 					} catch (NumberFormatException e) {
-						// Error.printError("invalid number");
-						errorMessage = Main.language == Main.Language.JP ? "網羅度に無効な値が指定されています．"
+						errorMessage = Main.language == Language.JP ? "網羅度に無効な値が指定されています．"
 								: "Invalid strength";
-						continue;
+						break;
 					}
 					if (strength < 2 || MAX_STRENGTH < strength) {
-						// Error.printError("invalid strength");
-						errorMessage = Main.language == Main.Language.JP ? "網羅度に無効な値が指定されています．"
+						errorMessage = Main.language == Language.JP ? "網羅度に無効な値が指定されています．"
 								: "Invalid strength";
-						continue;
 					}
-				}
-			}
-			// 繰り返し数
-			else if (option.equals("-repeat")) {
-				try {
-					numOfIterations = Integer.parseInt(str);
-				} catch (NumberFormatException e) {
-					// Error.printError("invalid repeating number");
-					errorMessage = Main.language == Main.Language.JP ? "くり返し数に無効な値が指定されています．"
+					break;
+				// 繰り返し数
+				case "-repeat":
+					try {
+						numOfIterations = Integer.parseInt(str);
+					} catch (NumberFormatException e) {
+						errorMessage = Main.language == Language.JP ? "くり返し数に無効な値が指定されています．"
 							: "Invalid number of repetition times";
-					continue;
-				}
-				if (numOfIterations <= 0 || numOfIterations > MAX_ITERATIONS) {
-					// Error.printError("invalid repeating number");
-					errorMessage = Main.language == Main.Language.JP ? "くり返し数に無効な値が指定されています．"
+						break;
+					}
+					if (numOfIterations <= 0 || numOfIterations > MAX_ITERATIONS) {
+						errorMessage = Main.language == Language.JP ? "くり返し数に無効な値が指定されています．"
 							: "Invalid number of repetition times";
-					continue;
-				}
-			} else if (option.equals("-s")) {
-				seedFile = str;
-			} else if (option.equals("-debug")) {
-				debugMode = true;
-				// 次の引数はダミー
-			} else if (option.equals("-lang")) {
-				if (str.matches("JP|jp")) {
-					Main.language = Main.Language.JP;
-				} else if (str.matches("EN|en")) {
-					Main.language = Main.Language.EN;
-				} else {
-					errorMessage = "無効な言語が指定されています (Invalid Language)";
-					continue;
-				}
-			} else {
-				// Error.printError("Invalid option");
-				errorMessage = Main.language == Main.Language.JP ? "無効なオプションが指定されています．"
+					}
+					break;
+				case "-s":
+					seedFile = str;
+					break;
+				case "-lang":
+					if (str.matches("JP|jp")) {
+						Main.language = Language.JP;
+					} else if (str.matches("EN|en")) {
+						Main.language = Language.EN;
+					} else {
+						errorMessage = "無効な言語が指定されています (Invalid Language)";
+					}
+					break;
+				default:
+					errorMessage = Main.language == Language.JP ? "無効なオプションが指定されています．"
 						: "Invalid option";
-				continue;
 			}
 		}
 
