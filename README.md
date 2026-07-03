@@ -90,3 +90,19 @@ BW,None,None,No,No
 - -repeat N: N times repetition
 - -lang [JP | EN] : Language
 - -policy: License notice
+
+## Citation
+The constraint handling algorithm used in CIT-BACH is described in the following paper. 
+
+```
+@INPROCEEDINGS{Tsuchiya2024,
+  author={Tsuchiya, Tatsuhiro},
+  booktitle={2024 IEEE International Conference on Software Testing, Verification and Validation Workshops (ICSTW)}, 
+  title={Use of binary decision diagrams to handle constraints in combinatorial interaction testing}, 
+  year={2024},
+  volume={},
+  number={},
+  pages={211-214},
+  keywords={Software testing;Constraint handling;Boolean functions;Conferences;Binary decision diagrams;Software;software testing;combinatorial testing;constraint;binary decision diagram},
+  doi={10.1109/ICSTW60967.2024.00048}}
+```
