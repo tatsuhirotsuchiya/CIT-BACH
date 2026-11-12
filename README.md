@@ -1,3 +1,5 @@
+English | [日本語](README.ja.md)
+
 # CIT-BACH
 
 ## Software description
